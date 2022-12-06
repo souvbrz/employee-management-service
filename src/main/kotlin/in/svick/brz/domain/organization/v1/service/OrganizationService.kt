@@ -20,8 +20,10 @@ class OrganizationService(private val organizationRepository: OrganizationReposi
     override suspend fun getOrganizations(): List<Organization>? =
         organizationRepository.findAll().map { it.toModel() }
 
-    override suspend fun updateOrganization(id: Long, organization: Organization): Organization =
-        organizationRepository.save(organization.toEntity()).toModel()
+    override suspend fun updateOrganization(id: Long, organization: Organization): Organization? =
+        organizationRepository.save(organization.toEntity(id)).takeIf {
+            organizationRepository.existsById(id)
+        }?.toModel()
 
     override suspend fun deleteOrganization(id: Long) =
         organizationRepository.deleteById(id)

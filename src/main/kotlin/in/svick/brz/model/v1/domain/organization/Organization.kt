@@ -1,6 +1,6 @@
 package `in`.svick.brz.model.v1.domain.organization
 
-import java.util.Locale.IsoCountryCode
+import java.time.ZonedDateTime
 
 data class Organization(
     val name: String,
@@ -19,4 +19,12 @@ fun Organization.toEntity() =
         name = name,
         countryCode = countryCode,
         modifiedAt = null
+    )
+
+fun Organization.toEntity(id: Long) =
+    OrganizationEntity(
+        id = id,
+        name = name,
+        countryCode = countryCode,
+        modifiedAt = ZonedDateTime.now()
     )
