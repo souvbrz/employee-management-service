@@ -51,3 +51,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.wrapper{
+    gradleVersion = "7.6"
+}
