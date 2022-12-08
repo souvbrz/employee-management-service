@@ -5,14 +5,9 @@ import org.springframework.stereotype.Service
 
 @Service
 interface OrganisationApplication {
-
     suspend fun createOrganization(organization: Organization): Organization
-
     suspend fun getOrganizationById(id: Long): Organization?
-
     suspend fun getOrganizations(): List<Organization>?
-
     suspend fun updateOrganization(id: Long, organization: Organization): Organization?
-
     suspend fun deleteOrganization(id: Long)
 }

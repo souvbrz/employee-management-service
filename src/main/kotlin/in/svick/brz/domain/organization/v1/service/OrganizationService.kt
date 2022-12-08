@@ -2,6 +2,7 @@ package `in`.svick.brz.domain.organization.v1.service
 
 import `in`.svick.brz.domain.organization.v1.application.OrganisationApplication
 import `in`.svick.brz.domain.organization.v1.repository.OrganizationRepository
+import `in`.svick.brz.exception.domain.organization.OrganizationNotFound
 import `in`.svick.brz.model.v1.domain.organization.Organization
 import `in`.svick.brz.model.v1.domain.organization.toEntity
 import `in`.svick.brz.model.v1.domain.organization.toModel
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrganizationService(private val organizationRepository: OrganizationRepository): OrganisationApplication {
-
     override suspend fun createOrganization(organization: Organization): Organization =
         organizationRepository.save(organization.toEntity()).toModel()
 
@@ -21,11 +21,15 @@ class OrganizationService(private val organizationRepository: OrganizationReposi
         organizationRepository.findAll().map { it.toModel() }
 
     override suspend fun updateOrganization(id: Long, organization: Organization): Organization? =
-        organizationRepository.save(organization.toEntity(id)).takeIf {
+        organizationRepository.save(
+            organization.copy(
+                name = organization.name,
+                countryCode = organization.countryCode
+            ).toEntity()
+        ).toModel().takeIf {
             organizationRepository.existsById(id)
-        }?.toModel()
+        } ?: throw OrganizationNotFound("Organization not found for Id - $id")
 
     override suspend fun deleteOrganization(id: Long) =
         organizationRepository.deleteById(id)
-
 }
